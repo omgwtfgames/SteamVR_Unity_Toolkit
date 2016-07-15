@@ -42,6 +42,7 @@ namespace VRTK
         private BoxCollider playAreaCursorCollider;
         private Transform headset;
         private bool isActive;
+        private bool destinationSetActive;
         private bool eventsRegistered = false;
 
         private float activateDelayTimer = 0f;
@@ -82,6 +83,8 @@ namespace VRTK
             //Setup controller event listeners
             controller.AliasPointerOn += new ControllerInteractionEventHandler(EnablePointerBeam);
             controller.AliasPointerOff += new ControllerInteractionEventHandler(DisablePointerBeam);
+            controller.AliasPointerSet += new ControllerInteractionEventHandler(SetPointerDestination);
+
             eventsRegistered = true;
 
             headset = DeviceFinder.HeadsetTransform();
@@ -118,6 +121,7 @@ namespace VRTK
             {
                 controller.AliasPointerOn -= EnablePointerBeam;
                 controller.AliasPointerOff -= DisablePointerBeam;
+                controller.AliasPointerSet -= SetPointerDestination;
             }
 
             if (playAreaCursor != null)
@@ -151,6 +155,7 @@ namespace VRTK
                 controllerIndex = e.controllerIndex;
                 TogglePointer(true);
                 isActive = true;
+                destinationSetActive = true;
             }
         }
 
@@ -163,6 +168,11 @@ namespace VRTK
                 TogglePointer(false);
                 isActive = false;
             }
+        }
+
+        protected virtual void SetPointerDestination(object sender, ControllerInteractionEventArgs e)
+        {
+            PointerSet();
         }
 
         protected virtual void PointerIn()
@@ -199,7 +209,7 @@ namespace VRTK
 
         protected virtual void PointerSet()
         {
-            if (!this.enabled || !isActive || !pointerContactTarget)
+            if (!this.enabled || !destinationSetActive || !pointerContactTarget)
             {
                 return;
             }
@@ -220,6 +230,11 @@ namespace VRTK
             if (!playAreaCursorCollided && (interactableObject == null || !interactableObject.pointerActivatesUseAction))
             {
                 OnDestinationMarkerSet(SetDestinationMarkerEvent(pointerContactDistance, pointerContactTarget, destinationPosition, controllerIndex));
+            }
+
+            if (!isActive)
+            {
+                destinationSetActive = false;
             }
         }
 
