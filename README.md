@@ -216,6 +216,10 @@ The following script parameters are available:
    * **OnClick():** Methods to invoke when the button is clicked.
    * **OnHold():** Methods to invoke each frame while the button is
    held down.
+   * **OnHoverEnter():** Methods to invoke when button is first hovered
+   over.
+   * **OnHoverExit():** Methods to invoke when button leaves the hovered
+   state.
   * **Button Prefab:** The base for each button in the menu, by default
   set to a dynamic circle arc that will fill up a portion of the menu.
   * **Button Thickness:** Percentage of the menu the buttons should
