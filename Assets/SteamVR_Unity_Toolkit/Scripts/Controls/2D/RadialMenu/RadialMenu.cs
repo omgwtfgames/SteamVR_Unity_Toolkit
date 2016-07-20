@@ -72,6 +72,7 @@ public class RadialMenu : MonoBehaviour
         {
             ExecuteEvents.Execute(menuButtons[currentHover], pointer, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.Execute(menuButtons[currentHover], pointer, ExecuteEvents.pointerExitHandler);
+            Buttons[currentHover].HoverExit();
         }
         if (evt == ButtonEvent.click) //Click button if click, and keep track of current press
         {
@@ -87,6 +88,7 @@ public class RadialMenu : MonoBehaviour
         else if (evt == ButtonEvent.hoverOn && currentHover != buttonID) // Show hover UI event (darken button etc)
         {
             ExecuteEvents.Execute(menuButtons[buttonID], pointer, ExecuteEvents.pointerEnterHandler);
+            Buttons[buttonID].HoverEnter();
         }
         currentHover = buttonID; //Set current hover ID, need this to un-hover if selected button changes
     }
@@ -128,6 +130,7 @@ public class RadialMenu : MonoBehaviour
         {
             var pointer = new PointerEventData(EventSystem.current);
             ExecuteEvents.Execute(menuButtons[currentHover], pointer, ExecuteEvents.pointerExitHandler);
+            Buttons[currentHover].HoverExit();
             currentHover = -1;
         }
     }
@@ -298,6 +301,8 @@ public class RadialMenuButton
     public Sprite ButtonIcon;
     public UnityEvent OnClick;
     public UnityEvent OnHold;
+    public UnityEvent OnHoverEnter;
+    public UnityEvent OnHoverExit;
 
     public void Press()
     {
@@ -307,6 +312,15 @@ public class RadialMenuButton
     public void Click()
     {
         OnClick.Invoke();
+    }
+
+    public void HoverEnter()
+    {
+        OnHoverEnter.Invoke();
+    }
+    public void HoverExit()
+    {
+        OnHoverExit.Invoke();
     }
 }
 
